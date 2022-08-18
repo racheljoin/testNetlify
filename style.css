@@ -1,0 +1,80 @@
+:root {
+    --clr-neon: hsl(317 100% 54%);
+    --clr-bg: hsl(323 21% 16%);
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: var(--clr-bg);
+    font-family: "Balsamiq Sans", cursive;
+    color: var(--clr-neon);
+  }
+  
+  .neon-button {
+    font-size: 4rem;
+  
+    display: inline-block;
+    cursor: pointer;
+    color: var(--clr-neon);
+    text-decoration: none;
+    text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.35), 0 0 0.45em currentColor;
+    box-shadow: inset 0 0 0.5em 0 var(--clr-neon), 0 0 0.5em 0 var(--clr-neon);
+  
+    border: var(--clr-neon) 4px solid;
+    border-radius: 0.25em;
+  
+    padding: 0.25em 1em;
+    position: relative;
+  }
+  
+  .neon-button::before,
+  .neon-button::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+  }
+  
+  .neon-button::before {
+    background: var(--clr-neon);
+    top: 120%;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transform: perspective(1em) rotateX(40deg) scale(1, 0.35);
+    filter: blur(1.5em);
+    opacity: .7;
+  }
+  
+  .neon-button::after {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--clr-neon);
+    box-shadow: 0 0 .75em .25em var(--clr-neon);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity .1s linear;
+  }
+  
+  .neon-button:hover,
+  .neon-button:focus {
+    color: var(--clr-bg);
+    text-shadow: none;
+  }
+  
+  .neon-button:focus::before,
+  .neon-button:focus::after,
+  .neon-button:hover::before,
+  .neon-button:hover::after {
+    opacity: 1;
+  }
+  
