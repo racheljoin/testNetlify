@@ -1,8 +1,107 @@
-<html dir="ltr" lang="zh" class="focus-outline-visible" lazy-loaded="true"><head>
-    <meta charset="utf-8">
-    <title>叫我及饿哦放假</title>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tornado</title>
     <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        cursor: none;
+      }
     </style>
-</body>
-<h1>hhhhhhhhhhhhhhhh</h1>
+  </head>
+  <body>
+    <!-- https://codesandbox.io/s/colored-tornado-rlm6b?file=/index.html -->
+    <canvas id="canvas"></canvas>
+    <script>
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+
+      var dots = [];
+      var dotsNumber = 100;
+      var tornadoRadiusX = 100;
+      var tornadoRadiusY = 50;
+
+      var mousePos = {
+        x: 0,
+        y: 0
+      };
+      var colors = ["red", "yellow", "blue", "green"];
+
+      var deltaX = width / 2;
+      var deltaY = height / 2;
+
+      function init() {
+        var i = dotsNumber;
+        while (i--) {
+          var alpha = Math.random() * Math.PI * 2;
+          dots.push({
+            radius: Math.random() * 4,
+            velocity: 0.02 + 0.03 * Math.random(),
+            alpha: alpha,
+            level: i,
+            color: colors[Math.floor(colors.length * Math.random())]
+          });
+        }
+        document.body.addEventListener("mousemove", function(e) {
+          mousePos.x = e.pageX;
+          mousePos.y = e.pageY;
+        });
+
+        tic();
+      }
+
+      function tic() {
+        update();
+        render();
+        requestAnimationFrame(tic);
+      }
+
+      function updatePosition(dot) {
+        var lev = dots.length - dot.level;
+        var centerX = deltaX + ((mousePos.x - deltaX) * lev) / dotsNumber;
+        var centerY = deltaY + ((mousePos.y - deltaY) * lev) / dotsNumber;
+        dot.x =
+          centerX +
+          (Math.sin(dot.alpha) * tornadoRadiusX * dot.level) / dotsNumber;
+        dot.y =
+          centerY +
+          (Math.cos(dot.alpha) * tornadoRadiusY * dot.level) / dotsNumber;
+      }
+
+      function update() {
+        dots.forEach(function(dot) {
+          dot.alpha += dot.velocity;
+          updatePosition(dot);
+        });
+        var dx = (deltaX - mousePos.x) / 100;
+        var dy = (deltaY - mousePos.y) / 100;
+        deltaX = Math.max(0, deltaX - dx * 3);
+        deltaY = Math.max(0, deltaY - dy * 3);
+      }
+
+      function render() {
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.fillRect(0, 0, width, height);
+
+        for (var i in dots) {
+          var dot = dots[i];
+          ctx.beginPath();
+          ctx.fillStyle = dot.color;
+          ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      init();
+    </script>
+  </body>
 </html>
